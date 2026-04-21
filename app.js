@@ -3,7 +3,7 @@
 
 // ─── BASE URL ─────────────────────────────────────────────
 // Change this to your deployed backend URL
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://creditprofile.onrender.com/api';
 
 // ─── Auth Helpers ─────────────────────────────────────────
 const getToken = () => localStorage.getItem('cp_token');
