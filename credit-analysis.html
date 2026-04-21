@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Analysis — Credit Profile</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .analysis-layout {
+      padding: 40px 0 80px;
+    }
+
+    /* Score ring section */
+    .score-section {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-section::before {
+      content: '';
+      position: absolute;
+      left: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(251,54,64,0.1) 0%, transparent 70%);
+    }
+
+    /* SVG ring */
+    .ring-container {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .ring-container svg {
+      filter: drop-shadow(0 0 16px rgba(251, 54, 64, 0.4));
+    }
+
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ring-score {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .ring-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-top: 4px;
+    }
+
+    .score-details h2 { font-size: 1.8rem; margin-bottom: 8px; }
+    .score-details p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+
+    /* Breakdown bars */
+    .breakdown-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .breakdown-item {
+      margin-bottom: 20px;
+    }
+
+    .breakdown-item:last-child { margin-bottom: 0; }
+
+    .breakdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .breakdown-name {
+      font-size: 0.85rem;
+      color: var(--gray);
+      letter-spacing: 0.05em;
+    }
+
+    .breakdown-points {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .breakdown-points.positive { color: #4ade80; }
+    .breakdown-points.negative { color: var(--red); }
+    .breakdown-points.neutral { color: var(--gray); }
+
+    /* Suggestions */
+    .suggestions-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .suggestion-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(251,54,64,0.08);
+    }
+
+    .suggestion-item:last-child { border-bottom: none; }
+
+    .suggestion-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(251,54,64,0.1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .suggestion-text {
+      font-size: 0.9rem;
+      color: var(--gray);
+      line-height: 1.6;
+      padding-top: 6px;
+    }
+
+    /* Score ranges legend */
+    .range-legend {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .range-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .range-num {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .range-txt { font-size: 0.75rem; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    @media (max-width: 768px) {
+      .score-section { flex-direction: column; text-align: center; }
+      .range-legend { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">CREDIT<span>PROFILE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="add-transaction.html">Add Transaction</a></li>
+      <li><a href="credit-analysis.html" class="active">Analysis</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="#" class="nav-cta" id="logoutBtn" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container analysis-layout">
+
+    <div class="red-line"></div>
+    <h1 class="section-title" style="margin-bottom:6px;">Credit <span>Analysis</span></h1>
+    <p style="color:var(--gray);font-size:0.9rem;margin-bottom:40px;">Detailed breakdown of your credit score and recommendations</p>
+
+    <!-- Loading -->
+    <div id="loadingState" style="text-align:center;padding:80px 0;">
+      <div class="spinner" style="width:40px;height:40px;border-width:3px;margin:0 auto;"></div>
+      <p style="color:var(--gray);margin-top:16px;font-size:0.9rem;">Analyzing your credit profile...</p>
+    </div>
+
+    <div id="analysisContent" style="display:none;">
+
+      <!-- Score Ring Section -->
+      <div class="score-section">
+        <div class="ring-container">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <!-- Background circle -->
+            <circle cx="90" cy="90" r="75" fill="none" stroke="rgba(251,54,64,0.1)" stroke-width="12"/>
+            <!-- Score arc -->
+            <circle id="scoreArc" cx="90" cy="90" r="75" fill="none"
+              stroke="#FB3640" stroke-width="12" stroke-linecap="round"
+              stroke-dasharray="471" stroke-dashoffset="471"
+              style="transform:rotate(-90deg);transform-origin:center;transition:stroke-dashoffset 1.5s ease;" />
+          </svg>
+          <div class="ring-center">
+            <div class="ring-score" id="ringScore">—</div>
+            <div class="ring-label">Credit Score</div>
+          </div>
+        </div>
+
+        <div class="score-details">
+          <h2>Your Score is <span style="color:var(--red)" id="scoreHeading">—</span></h2>
+          <p id="riskDescription">Loading analysis...</p>
+          <div id="riskBadgeLarge"></div>
+          <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="add-transaction.html" class="btn btn-primary">Add Transaction</a>
+            <a href="dashboard.html" class="btn btn-outline">View Dashboard</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score Ranges -->
+      <div class="range-legend">
+        <div class="range-item" id="rangeLow">
+          <div class="range-num" style="color:#4ade80;">750–900</div>
+          <div class="range-txt">Low Risk</div>
+        </div>
+        <div class="range-item" id="rangeMedium">
+          <div class="range-num" style="color:#fbbf24;">600–749</div>
+          <div class="range-txt">Medium Risk</div>
+        </div>
+        <div class="range-item" id="rangeHigh">
+          <div class="range-num" style="color:var(--red);">300–599</div>
+          <div class="range-txt">High Risk</div>
+        </div>
+      </div>
+
+      <!-- Score Breakdown -->
+      <div class="breakdown-section">
+        <h3 style="font-size:1.1rem;margin-bottom:24px;">Score Breakdown</h3>
+
+        <div class="breakdown-item">
+          <div class="breakdown-header">
+            <span class="breakdown-name">Base Score</span>
+            <span class="breakdown-points neutral" id="baseScore">500</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:33%;background:var(--gray-dim);"></div>
+          </div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-header">
+            <span class="breakdown-name">From Total Orders (+2 per order)</span>
+            <span class="breakdown-points positive" id="fromOrders">+0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="ordersBar" style="width:0%;background:linear-gradient(90deg,#166534,#4ade80);"></div>
+          </div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-header">
+            <span class="breakdown-name">From Prepaid Orders (+5 per UPI/Card)</span>
+            <span class="breakdown-points positive" id="fromPrepaid">+0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="prepaidBar" style="width:0%;background:linear-gradient(90deg,#1e3a5f,#60a5fa);"></div>
+          </div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-header">
+            <span class="breakdown-name">From COD Orders (−5 per COD)</span>
+            <span class="breakdown-points negative" id="fromCOD">0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="codBar" style="width:0%;background:linear-gradient(90deg,#7f1d1d,var(--red));"></div>
+          </div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-header">
+            <span class="breakdown-name">From Returns (−10 per return)</span>
+            <span class="breakdown-points negative" id="fromReturns">0</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="returnsBar" style="width:0%;background:linear-gradient(90deg,#78350f,#fbbf24);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="suggestions-section">
+        <h3 style="font-size:1.1rem;margin-bottom:6px;">💡 Improvement Suggestions</h3>
+        <p style="font-size:0.8rem;color:var(--gray);margin-bottom:20px;">Personalized recommendations based on your behavior</p>
+        <div id="suggestionsList"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const ICONS = ['💳', '📦', '⭐', '🔄', '🚀', '✅'];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!requireAuth()) return;
+
+      try {
+        const data = await apiCall('/credit-score');
+        renderAnalysis(data);
+      } catch (err) {
+        if (err.message.includes('Token')) { clearAuth(); window.location.href = 'auth.html'; }
+      }
+    });
+
+    function renderAnalysis(d) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('analysisContent').style.display = 'block';
+
+      const score = d.creditScore;
+
+      // Ring
+      const arc = document.getElementById('scoreArc');
+      const circumference = 2 * Math.PI * 75;
+      const pct = (score - 300) / 600;
+      const riskClass = score >= 750 ? 'low' : score >= 600 ? 'medium' : 'high';
+      const riskColor = score >= 750 ? '#4ade80' : score >= 600 ? '#fbbf24' : '#FB3640';
+
+      arc.style.stroke = riskColor;
+      arc.style.filter = `drop-shadow(0 0 8px ${riskColor})`;
+      setTimeout(() => {
+        arc.style.strokeDashoffset = circumference - (pct * circumference);
+      }, 300);
+
+      // Numbers
+      const scoreEl = document.getElementById('ringScore');
+      animateNumber(scoreEl, score, 1400);
+      document.getElementById('scoreHeading').textContent = score;
+
+      // Risk badge
+      document.getElementById('riskBadgeLarge').innerHTML = `<span class="badge badge-${riskClass}">${d.riskLevel}</span>`;
+
+      // Description
+      const descs = {
+        Low: 'Outstanding! Your responsible payment habits and low return rate place you in the elite Low Risk category. You qualify for premium credit benefits.',
+        Medium: 'Your profile is decent but has room for improvement. Switching more orders to prepaid and reducing returns will push you into Low Risk territory.',
+        High: 'Your current behavior puts you in the High Risk zone. Focus on making prepaid payments and avoid returning items to significantly boost your score.'
+      };
+      const key = score >= 750 ? 'Low' : score >= 600 ? 'Medium' : 'High';
+      document.getElementById('riskDescription').textContent = descs[key];
+
+      // Highlight current range
+      ['rangeLow','rangeMedium','rangeHigh'].forEach(id => {
+        document.getElementById(id).style.border = '1px solid var(--border)';
+      });
+      const rangeMap = { Low: 'rangeLow', Medium: 'rangeMedium', High: 'rangeHigh' };
+      document.getElementById(rangeMap[key]).style.border = `1px solid ${riskColor}`;
+      document.getElementById(rangeMap[key]).style.boxShadow = `0 0 20px ${riskColor}33`;
+
+      // Breakdown
+      const b = d.breakdown;
+      document.getElementById('baseScore').textContent = b.baseScore;
+      document.getElementById('fromOrders').textContent = '+' + b.fromOrders;
+      document.getElementById('fromPrepaid').textContent = '+' + b.fromPrepaid;
+      document.getElementById('fromCOD').textContent = b.fromCOD;
+      document.getElementById('fromReturns').textContent = b.fromReturns;
+
+      // Breakdown bars (as pct of their max reasonable contribution)
+      setTimeout(() => {
+        document.getElementById('ordersBar').style.width = Math.min(100, (b.fromOrders / 200) * 100) + '%';
+        document.getElementById('prepaidBar').style.width = Math.min(100, (b.fromPrepaid / 300) * 100) + '%';
+        document.getElementById('codBar').style.width = Math.min(100, (Math.abs(b.fromCOD) / 200) * 100) + '%';
+        document.getElementById('returnsBar').style.width = Math.min(100, (Math.abs(b.fromReturns) / 200) * 100) + '%';
+      }, 400);
+
+      // Suggestions
+      const sugEl = document.getElementById('suggestionsList');
+      sugEl.innerHTML = d.suggestions.map((s, i) => `
+        <div class="suggestion-item">
+          <div class="suggestion-icon">${ICONS[i % ICONS.length]}</div>
+          <div class="suggestion-text">${s}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

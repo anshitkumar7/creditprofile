@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Profile System</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Hero ── */
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background grid */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(195,216,9,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(195,216,9,0.08) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    /* Glow blob */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(195,216,9,0.16) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 24px;
+      background: rgba(195, 216, 9, 0.12);
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--red);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--red);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 .highlight {
+      color: var(--red);
+      position: relative;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 520px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Floating stat cards */
+    .hero-stats {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 1;
+    }
+
+    .hero-stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      min-width: 200px;
+      backdrop-filter: blur(8px);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .hero-stat-card:nth-child(2) { animation-delay: 1s; }
+    .hero-stat-card:nth-child(3) { animation-delay: 2s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .hero-stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    .hero-stat-label {
+      font-size: 0.75rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Features Section ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(195,216,9,0.6);
+      box-shadow: 0 0 30px var(--red-glow-sm);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* ── Score Demo ── */
+    .score-demo {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-demo::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(195,216,9,0.2) 0%, transparent 70%);
+    }
+
+    .demo-score {
+      font-family: var(--font-display);
+      font-size: 7rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+      text-shadow: 0 0 40px var(--red-glow);
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-stats { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">CREDIT<span>PROFILE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="add-transaction.html">Add Transaction</a></li>
+      <li><a href="credit-analysis.html">Analysis</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="auth.html" class="nav-cta" id="authNavBtn">Login</a></li>
+      <li><a href="#" class="nav-cta" id="logoutBtn" style="display:none" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-tag">AI-Powered Credit Intelligence</div>
+
+        <h1>
+          Know Your<br>
+          <span class="highlight">Credit Profile</span><br>
+          Instantly
+        </h1>
+
+        <p class="hero-desc">
+          An intelligent credit scoring system that analyzes your e-commerce
+          behavior — payment methods, order history, and returns — to generate
+          a real-time credit profile and risk assessment.
+        </p>
+
+        <div class="hero-actions">
+          <a href="auth.html" class="btn btn-primary btn-lg">Get Started →</a>
+          <a href="about.html" class="btn btn-outline btn-lg">Learn More</a>
+        </div>
+      </div>
+
+      <!-- Floating stat cards -->
+      <div class="hero-stats">
+        <div class="hero-stat-card">
+          <div class="hero-stat-num">750+</div>
+          <div class="hero-stat-label">Low Risk Score</div>
+        </div>
+        <div class="hero-stat-card">
+          <div class="hero-stat-num">300–900</div>
+          <div class="hero-stat-label">Score Range</div>
+        </div>
+        <div class="hero-stat-card">
+          <div class="hero-stat-num">Real-time</div>
+          <div class="hero-stat-label">Score Updates</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" style="background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);">
+    <div class="container">
+      <div class="red-line"></div>
+      <h2 class="section-title">How It <span>Works</span></h2>
+      <p class="section-sub">Three steps to your complete credit profile</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Register & Setup</h3>
+          <p>Create your account with basic details. Your credit journey starts with a base score of 500.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💳</div>
+          <h3>Add Transactions</h3>
+          <p>Log your e-commerce orders — payment method (COD/UPI/Card), amount, and return status.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>View Your Score</h3>
+          <p>Get your credit score, risk level (Low/Medium/High), and personalized improvement tips.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Real-time Updates</h3>
+          <p>Your score recalculates instantly after every transaction. See changes in real time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Risk Assessment</h3>
+          <p>AI-driven risk categorization: Low (750+), Medium (600–749), High (below 600).</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💡</div>
+          <h3>Smart Suggestions</h3>
+          <p>Receive actionable recommendations tailored to your specific spending behavior.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORE DEMO -->
+  <section class="section">
+    <div class="container">
+      <div style="max-width: 500px; margin: 0 auto;">
+        <div class="score-demo">
+          <p style="font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;">SAMPLE CREDIT SCORE</p>
+          <div class="demo-score">782</div>
+          <div style="margin-top:12px;">
+            <span class="badge badge-low">✓ Low Risk</span>
+          </div>
+          <div class="divider"></div>
+          <p style="color:var(--gray);font-size:0.9rem;">Start tracking your orders to see your real score →</p>
+          <br>
+          <a href="auth.html" class="btn btn-primary">Get Your Score</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

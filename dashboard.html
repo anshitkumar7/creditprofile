@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Credit Profile</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-header {
+      padding: 40px 0 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    .page-header p { color: var(--gray); font-size: 0.9rem; }
+
+    /* Score hero card */
+    .score-hero {
+      background: linear-gradient(135deg, rgba(251,54,64,0.1) 0%, var(--card-bg) 100%);
+      border: 1px solid rgba(251, 54, 64, 0.4);
+      border-radius: 20px;
+      padding: 40px;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-hero::before {
+      content: '';
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(251,54,64,0.12) 0%, transparent 60%);
+    }
+
+    .score-big {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+      text-shadow: 0 0 30px var(--red-glow);
+    }
+
+    .score-info { flex: 1; }
+    .score-info h3 { font-size: 1.4rem; margin-bottom: 8px; }
+    .score-info p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+
+    .score-bar-wrap {
+      margin-top: 12px;
+    }
+
+    .score-range {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--gray);
+      margin-bottom: 6px;
+    }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(251,54,64,0.4);
+      box-shadow: 0 0 20px var(--red-glow-sm);
+    }
+
+    .stat-icon {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .stat-lbl {
+      font-size: 0.75rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Payment breakdown */
+    .breakdown-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .breakdown-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(251,54,64,0.08);
+    }
+
+    .breakdown-row:last-child { border-bottom: none; }
+
+    .breakdown-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    .breakdown-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .breakdown-val {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    /* Recent transactions */
+    .transactions-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .txn-empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    .txn-empty a {
+      color: var(--red);
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .score-hero { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">CREDIT<span>PROFILE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html" class="active">Dashboard</a></li>
+      <li><a href="add-transaction.html">Add Transaction</a></li>
+      <li><a href="credit-analysis.html">Analysis</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="#" class="nav-cta" id="logoutBtn" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+
+    <div class="page-header">
+      <h1>Dashboard <span style="color:var(--red)" id="welcomeName"></span></h1>
+      <p>Your complete credit overview at a glance</p>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loadingState" style="text-align:center;padding:80px 0;">
+      <div class="spinner" style="width:40px;height:40px;border-width:3px;margin:0 auto;"></div>
+      <p style="color:var(--gray);margin-top:16px;font-size:0.9rem;">Loading your profile...</p>
+    </div>
+
+    <!-- Dashboard content -->
+    <div id="dashContent" style="display:none;">
+
+      <!-- Score Hero -->
+      <div class="score-hero">
+        <div>
+          <p style="font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray);margin-bottom:8px;">CREDIT SCORE</p>
+          <div class="score-big" id="bigScore">—</div>
+          <div style="margin-top:8px;" id="riskBadge"></div>
+        </div>
+        <div class="score-info">
+          <h3>Your Credit Profile</h3>
+          <p id="scoreDesc">Loading your credit profile data...</p>
+          <div class="score-bar-wrap">
+            <div class="score-range">
+              <span>300 · High Risk</span>
+              <span>600 · Medium</span>
+              <span>750+ · Low Risk</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="scoreProgressBar" style="width:0%"></div>
+            </div>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:12px;">
+            <a href="credit-analysis.html" class="btn btn-primary">View Analysis</a>
+            <a href="add-transaction.html" class="btn btn-outline">Add Transaction</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📦</div>
+          <div class="stat-val" id="totalOrders">0</div>
+          <div class="stat-lbl">Total Orders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-val" id="totalSpending">₹0</div>
+          <div class="stat-lbl">Total Spending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🔄</div>
+          <div class="stat-val" id="returns">0</div>
+          <div class="stat-lbl">Returns</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-val" id="returnRate">0%</div>
+          <div class="stat-lbl">Return Rate</div>
+        </div>
+      </div>
+
+      <!-- Payment Breakdown + Transactions -->
+      <div class="grid-2">
+
+        <div class="breakdown-card">
+          <h3 style="font-size:1rem;margin-bottom:20px;">Payment Breakdown</h3>
+
+          <div class="breakdown-row">
+            <div class="breakdown-label">
+              <div class="breakdown-dot" style="background:#4ade80;"></div>
+              UPI / Card (Prepaid)
+            </div>
+            <div class="breakdown-val" id="prepaidOrders">0</div>
+          </div>
+
+          <div class="breakdown-row">
+            <div class="breakdown-label">
+              <div class="breakdown-dot" style="background:var(--red);"></div>
+              Cash on Delivery
+            </div>
+            <div class="breakdown-val" id="codOrders">0</div>
+          </div>
+
+          <div class="breakdown-row">
+            <div class="breakdown-label">
+              <div class="breakdown-dot" style="background:#fbbf24;"></div>
+              Total Returns
+            </div>
+            <div class="breakdown-val" id="returnsBreakdown">0</div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <p style="font-size:0.75rem;color:var(--gray);margin-bottom:8px;letter-spacing:0.1em;text-transform:uppercase;">Prepaid vs COD Ratio</p>
+            <div class="progress-bar">
+              <div class="progress-fill" id="prepaidRatioBar" style="width:0%;background:linear-gradient(90deg,#166534,#4ade80);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="transactions-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h3 style="font-size:1rem;">Recent Transactions</h3>
+            <a href="add-transaction.html" class="btn btn-outline" style="padding:6px 14px;font-size:0.8rem;">+ Add</a>
+          </div>
+          <div id="txnList">
+            <div class="txn-empty">No transactions yet.<br>
+              <a href="add-transaction.html">Add your first transaction →</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!requireAuth()) return;
+
+      const user = getUser();
+      if (user) {
+        document.getElementById('welcomeName').textContent = `— ${user.name}`;
+      }
+
+      try {
+        // Fetch dashboard data
+        const data = await apiCall('/dashboard');
+        renderDashboard(data);
+
+        // Fetch recent transactions
+        const txnData = await apiCall('/transactions');
+        renderTransactions(txnData.transactions);
+
+      } catch (err) {
+        if (err.message.includes('Token') || err.message.includes('authorized')) {
+          clearAuth();
+          window.location.href = 'auth.html';
+        }
+      }
+    });
+
+    function renderDashboard(d) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('dashContent').style.display = 'block';
+
+      // Big score with animation
+      const scoreEl = document.getElementById('bigScore');
+      animateNumber(scoreEl, d.creditScore, 1200);
+
+      // Risk badge
+      const badge = document.getElementById('riskBadge');
+      const riskClass = d.riskLevel.includes('Low') ? 'low' : d.riskLevel.includes('Medium') ? 'medium' : 'high';
+      badge.innerHTML = `<span class="badge badge-${riskClass}">${d.riskLevel}</span>`;
+
+      // Score description
+      const desc = {
+        Low: 'Excellent credit behavior! You qualify for premium e-commerce benefits.',
+        Medium: 'Good profile. Increase prepaid orders to boost your score.',
+        High: 'Your score needs improvement. Avoid COD and reduce returns.'
+      };
+      const key = d.riskLevel.includes('Low') ? 'Low' : d.riskLevel.includes('Medium') ? 'Medium' : 'High';
+      document.getElementById('scoreDesc').textContent = desc[key];
+
+      // Score progress bar (300–900 = 600 range)
+      const pct = ((d.creditScore - 300) / 600) * 100;
+      setTimeout(() => {
+        document.getElementById('scoreProgressBar').style.width = pct + '%';
+      }, 300);
+
+      // Stats
+      document.getElementById('totalOrders').textContent = d.totalOrders;
+      document.getElementById('totalSpending').textContent = formatCurrency(d.totalSpending);
+      document.getElementById('returns').textContent = d.returns;
+
+      const retRate = d.totalOrders > 0 ? ((d.returns / d.totalOrders) * 100).toFixed(1) : 0;
+      document.getElementById('returnRate').textContent = retRate + '%';
+
+      // Breakdown
+      document.getElementById('prepaidOrders').textContent = d.prepaidOrders;
+      document.getElementById('codOrders').textContent = d.codOrders;
+      document.getElementById('returnsBreakdown').textContent = d.returns;
+
+      // Prepaid ratio bar
+      const prepaidPct = d.totalOrders > 0 ? (d.prepaidOrders / d.totalOrders) * 100 : 0;
+      setTimeout(() => {
+        document.getElementById('prepaidRatioBar').style.width = prepaidPct + '%';
+      }, 400);
+    }
+
+    function renderTransactions(txns) {
+      const el = document.getElementById('txnList');
+      if (!txns || txns.length === 0) return;
+
+      const rows = txns.slice(0, 5).map(t => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(251,54,64,0.07);">
+          <div>
+            <div style="font-size:0.9rem;color:var(--white);margin-bottom:2px;">${formatCurrency(t.amount)}</div>
+            <div style="font-size:0.75rem;color:var(--gray);">${formatDate(t.date)}</div>
+          </div>
+          <div style="text-align:right;">
+            <span style="font-size:0.75rem;padding:3px 10px;border-radius:20px;background:${t.paymentMethod === 'COD' ? 'rgba(251,54,64,0.15)' : 'rgba(74,222,128,0.1)'};color:${t.paymentMethod === 'COD' ? 'var(--red)' : '#4ade80'};">${t.paymentMethod}</span>
+            ${t.returned ? `<div style="font-size:0.7rem;color:#fbbf24;margin-top:3px;">Returned</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      el.innerHTML = rows;
+    }
+  </script>
+</body>
+</html>

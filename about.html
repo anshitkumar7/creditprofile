@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Credit Profile</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .about-hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .about-hero h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 20px;
+    }
+
+    .about-hero p {
+      color: var(--gray);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Tech stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 64px;
+    }
+
+    .tech-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+
+    .tech-card:hover {
+      border-color: rgba(251,54,64,0.5);
+      box-shadow: 0 0 24px var(--red-glow-sm);
+      transform: translateY(-3px);
+    }
+
+    .tech-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .tech-card h3 { font-size: 1rem; margin-bottom: 8px; color: var(--white); }
+    .tech-card p { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
+    .tech-tag {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 3px 10px;
+      background: rgba(251,54,64,0.1);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+
+    /* Score logic */
+    .logic-table {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .logic-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px;
+      border-bottom: 1px solid rgba(251,54,64,0.08);
+    }
+
+    .logic-row:last-child { border-bottom: none; }
+
+    .logic-action {
+      font-size: 0.9rem;
+      color: var(--gray);
+    }
+
+    .logic-points {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    /* Team */
+    .project-info {
+      background: linear-gradient(135deg, rgba(251,54,64,0.08) 0%, var(--card-bg) 100%);
+      border: 1px solid rgba(251,54,64,0.3);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .project-info h2 { font-size: 1.8rem; margin-bottom: 16px; }
+    .project-info p { color: var(--gray); line-height: 1.7; max-width: 560px; margin: 0 auto 24px; }
+
+    @media (max-width: 768px) {
+      .tech-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">CREDIT<span>PROFILE</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="add-transaction.html">Add Transaction</a></li>
+      <li><a href="credit-analysis.html">Analysis</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="auth.html" class="nav-cta" id="authNavBtn">Login</a></li>
+      <li><a href="#" class="nav-cta" id="logoutBtn" style="display:none" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="about-hero">
+      <div class="red-line" style="margin:0 auto 20px;"></div>
+      <h1>About <span style="color:var(--red)">Credit Profile</span><br>System</h1>
+      <p>
+        A college project exploring AI-driven credit scoring based on e-commerce purchasing behavior,
+        built with a modern full-stack architecture.
+      </p>
+    </div>
+
+    <!-- PROJECT OVERVIEW -->
+    <div class="card" style="margin-bottom:48px;padding:40px;">
+      <h2 style="font-size:1.4rem;margin-bottom:16px;">Project Overview</h2>
+      <p style="color:var(--gray);line-height:1.8;margin-bottom:16px;">
+        Traditional credit systems rely on bank statements and loan history — data that many young consumers simply don't have.
+        This project explores an alternative: using <strong style="color:var(--white)">e-commerce behavioral data</strong> to build credit profiles.
+      </p>
+      <p style="color:var(--gray);line-height:1.8;">
+        By analyzing order frequency, payment preferences (prepaid vs COD), and return rates, the system generates a
+        credit score between 300–900 and categorizes users into Low, Medium, or High risk groups — with personalized
+        improvement suggestions.
+      </p>
+    </div>
+
+    <!-- TECH STACK -->
+    <div class="red-line"></div>
+    <h2 class="section-title" style="margin-bottom:8px;">Tech <span>Stack</span></h2>
+    <p style="color:var(--gray);font-size:0.9rem;margin-bottom:32px;">Built with modern, production-ready technologies</p>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon">🌐</div>
+        <h3>Frontend</h3>
+        <p>Pure HTML5, CSS3, and vanilla JavaScript. No frameworks — focused on core web fundamentals with modern UI patterns.</p>
+        <span class="tech-tag">Client Layer</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">⚙️</div>
+        <h3>Backend</h3>
+        <p>Node.js with Express.js for a fast, minimal REST API. JWT authentication for secure user sessions.</p>
+        <span class="tech-tag">Server Layer</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🗄️</div>
+        <h3>Database</h3>
+        <p>MongoDB with Mongoose ODM. Flexible document storage for user profiles and transaction history.</p>
+        <span class="tech-tag">Data Layer</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🔐</div>
+        <h3>Authentication</h3>
+        <p>bcryptjs for password hashing, JSON Web Tokens (JWT) for stateless auth. Secure and scalable.</p>
+        <span class="tech-tag">Security</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🚀</div>
+        <h3>Deployment Ready</h3>
+        <p>Environment variables via dotenv. CORS configured. Can be deployed to Render, Railway, or Vercel.</p>
+        <span class="tech-tag">DevOps</span>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🧠</div>
+        <h3>Credit Algorithm</h3>
+        <p>Rule-based scoring engine that processes transaction data and computes weighted scores in real time.</p>
+        <span class="tech-tag">AI / Logic</span>
+      </div>
+    </div>
+
+    <!-- SCORING LOGIC -->
+    <div class="red-line"></div>
+    <h2 class="section-title" style="margin-bottom:8px;">Scoring <span>Logic</span></h2>
+    <p style="color:var(--gray);font-size:0.9rem;margin-bottom:32px;">Transparent and explainable credit calculation rules</p>
+
+    <div class="logic-table">
+      <div class="logic-row" style="background:rgba(251,54,64,0.05);border-bottom:1px solid var(--border);">
+        <span style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);font-weight:600;">ACTION</span>
+        <span style="font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray);font-weight:600;">SCORE IMPACT</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Base Score (starting point)</span>
+        <span class="logic-points" style="color:var(--gray);">500</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Each order placed</span>
+        <span class="logic-points" style="color:#4ade80;">+2 points</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Each prepaid order (UPI / Card)</span>
+        <span class="logic-points" style="color:#4ade80;">+5 points</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Each COD (Cash on Delivery) order</span>
+        <span class="logic-points" style="color:var(--red);">−5 points</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Each item returned</span>
+        <span class="logic-points" style="color:var(--red);">−10 points</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Minimum score limit</span>
+        <span class="logic-points" style="color:#fbbf24;">300</span>
+      </div>
+      <div class="logic-row">
+        <span class="logic-action">Maximum score limit</span>
+        <span class="logic-points" style="color:#fbbf24;">900</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="project-info">
+      <h2>Ready to See Your Score?</h2>
+      <p>
+        Create an account, add your transaction history, and get your personalized
+        credit profile in minutes.
+      </p>
+      <a href="auth.html" class="btn btn-primary btn-lg">Get Started →</a>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Register — Credit Profile</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-wrapper {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left panel */
+    .auth-left {
+      background: linear-gradient(160deg, #000F08 0%, #020f08 60%, #0a0005 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(251,54,64,0.12) 0%, transparent 70%);
+    }
+
+    .auth-left-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 60px;
+    }
+
+    .auth-left-logo span { color: var(--red); }
+
+    .auth-left h2 {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .auth-left p {
+      color: var(--gray);
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-bottom: 40px;
+    }
+
+    .auth-stat {
+      display: flex;
+      gap: 32px;
+      margin-top: 8px;
+    }
+
+    .auth-stat-item .num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    .auth-stat-item .lbl {
+      font-size: 0.75rem;
+      color: var(--gray);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Right panel */
+    .auth-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      background: var(--bg);
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Tabs */
+    .auth-tabs {
+      display: flex;
+      background: var(--bg2);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 32px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: none;
+      border: none;
+      border-radius: 9px;
+      color: var(--gray);
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: var(--red);
+      color: #141218;
+      box-shadow: 0 0 12px var(--red-glow);
+    }
+
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    .auth-form h3 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    .auth-form p {
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .auth-wrapper { grid-template-columns: 1fr; }
+      .auth-left { display: none; }
+      .auth-right { padding: 24px; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <div class="auth-left-logo">CREDIT<span>PROFILE</span></div>
+      <div class="red-line"></div>
+      <h2>Your Financial<br><span style="color:var(--red)">Identity</span><br>Starts Here</h2>
+      <p>
+        Build a transparent credit profile based on your real e-commerce behavior.
+        No guesswork — just data-driven intelligence.
+      </p>
+      <div class="auth-stat">
+        <div class="auth-stat-item">
+          <div class="num">300</div>
+          <div class="lbl">Min Score</div>
+        </div>
+        <div class="auth-stat-item">
+          <div class="num">900</div>
+          <div class="lbl">Max Score</div>
+        </div>
+        <div class="auth-stat-item">
+          <div class="num">3</div>
+          <div class="lbl">Risk Levels</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <div class="auth-box">
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+          <button class="tab-btn" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Alert -->
+        <div id="authAlert" class="alert alert-error"></div>
+
+        <!-- LOGIN FORM -->
+        <div class="auth-form active" id="loginForm">
+          <h3>Welcome Back</h3>
+          <p>Enter your credentials to access your credit dashboard</p>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="loginEmail" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" />
+          </div>
+
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" id="loginBtn" onclick="handleLogin()">
+            Login
+          </button>
+
+          <p style="text-align:center; margin-top:20px; font-size:0.85rem; color:var(--gray);">
+            Don't have an account?
+            <a href="#" onclick="switchTab('register')" style="color:var(--red); text-decoration:none;">Register</a>
+          </p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="auth-form" id="registerForm">
+          <h3>Create Account</h3>
+          <p>Join to start building your credit profile</p>
+
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="regName" placeholder="John Doe" />
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="regEmail" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="regPhone" placeholder="+91 98765 43210" />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" placeholder="Min 6 characters" />
+          </div>
+
+          <button class="btn btn-primary" style="width:100%; justify-content:center;" id="registerBtn" onclick="handleRegister()">
+            Create Account
+          </button>
+
+          <p style="text-align:center; margin-top:20px; font-size:0.85rem; color:var(--gray);">
+            Already have an account?
+            <a href="#" onclick="switchTab('login')" style="color:var(--red); text-decoration:none;">Login</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // Redirect if already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      if (getToken()) window.location.href = 'dashboard.html';
+    });
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+      });
+      document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+      document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginBtn');
+
+      // Validation
+      if (!email || !password) {
+        return showAlert('authAlert', 'Please fill in all fields.');
+      }
+
+      setLoading(btn, true);
+      try {
+        const data = await apiCall('/login', 'POST', { email, password });
+        setAuth(data.token, data.user);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        showAlert('authAlert', err.message);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+
+    async function handleRegister() {
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const btn = document.getElementById('registerBtn');
+
+      // Validation
+      if (!name || !email || !password) {
+        return showAlert('authAlert', 'Name, email and password are required.');
+      }
+      if (password.length < 6) {
+        return showAlert('authAlert', 'Password must be at least 6 characters.');
+      }
+
+      setLoading(btn, true);
+      try {
+        const data = await apiCall('/register', 'POST', { name, email, phone, password });
+        setAuth(data.token, data.user);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        showAlert('authAlert', err.message);
+      } finally {
+        setLoading(btn, false);
+      }
+    }
+
+    // Allow Enter key for forms
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const loginActive = document.getElementById('loginForm').classList.contains('active');
+        loginActive ? handleLogin() : handleRegister();
+      }
+    });
+  </script>
+</body>
+</html>
